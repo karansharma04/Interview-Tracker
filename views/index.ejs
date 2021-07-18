@@ -1,0 +1,69 @@
+<%- include('partials/header'); -%>
+
+<h2 class='recipe'>Topics</h2>
+
+<% if(reports.length > 0){ %>
+<div>
+<% reports.forEach((image)=>{ %>
+<div  class="boxed">
+<div   class="main-content" >
+<a href="/topic/<%=image.topic %>" class="list">
+<h3> &emsp; <%= image.topic %></h3></a>
+<br>
+</div>
+</div>
+<br>
+<% }) %>
+</div>
+<% }else{ %>
+<P>No topics to display</P>
+<%  } %>  
+
+<a href="/addQuestion" class="btn">Add a question </a>
+
+<button onclick="document.getElementById('id02').style.display='block'" style="float:left;">Add a new topic</button>
+<div id="id02" class="modal">
+    <span onclick="document.getElementById('id02').style.display='none'"
+  class="close" title="Close Modal">&times;</span>
+  <form action="/practice" method="post" enctype="multipart/form-data">
+    <label for="topic">Add a new topic here</label>
+    <input type="text" name="topic" />
+    <button>Submit</button>
+</form>
+</div>
+
+<script>
+  const form=document.querySelector('form');
+  form.addEventListener('submit',async(e)=>{
+      e.preventDefault();//prevents the forms from refreshing
+      
+      //getting values
+      const topic=form.topic.value;
+      try{
+          const res=await fetch('/practice',{
+              method:'POST',
+              body: JSON.stringify({topic:topic}),
+              headers: {'Content-Type':'application/json'}
+          });
+          
+          console.log("hi");
+          console.log("Hello");
+          console.log(res);
+          const status =await res.status;
+          console.log(status);
+          
+          
+          if(res.ok){
+              location.assign('/addQuestion');
+          }
+          else{
+              alert('ERROR')
+              location.assign('/addQuestion');
+          }
+      }
+      catch(err){
+          console.log(err);
+      }
+  })
+</script>
+
